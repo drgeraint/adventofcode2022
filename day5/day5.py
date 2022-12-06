@@ -10,12 +10,6 @@ read_columns1 = [[]]
 columns1 = []
 columns2 = []
 
-Az = set()
-for i in range(ord('a'), ord('z')+1):
-    Az.add(chr(i))
-for i in range(ord('A'), ord('Z')+1):
-    Az.add(chr(i))
-
 building_stack = True
 for line in lines:
     if building_stack and len(line) is 0:
@@ -29,7 +23,7 @@ for line in lines:
         i = 1
         while (i < n):
             c = line[i]
-            if c in Az:
+            if c.isalpha():
                 while col >= len(read_columns1):
                     read_columns1.append([])
                 read_columns1[col].append(c)

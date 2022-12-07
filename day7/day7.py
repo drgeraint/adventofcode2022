@@ -24,8 +24,8 @@ class Directory:
         total = 0
         for f in self.files:
             total = total + f.size()
-        for d in self.directories:
-            total = total + self.directories[d].size()
+        for k, d in self.directories.items():
+            total = total + d.size()
         return total
             
     def add_file(self, name, size):
@@ -44,8 +44,8 @@ class Directory:
         print(self.name, self.size())
 
     def ls(self):
-        for d in self.directories:
-            self.directories[d].print()
+        for k, d in self.directories.items():
+            d.print()
         for f in self.files:
             f.print()
         

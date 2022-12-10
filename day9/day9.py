@@ -1,34 +1,22 @@
 #! /usr/bin/env python3
 
 HEAD = [0,0]
-TAIL = [0,0]
-#TAIL_TRAIL = set(tuple(TAIL))
 TAIL_TRAIL = set()
 
+part = 2
+if 1 == part:
+        n = 2
+elif 2 == part:
+        n = 10
+
 KNOTS = [HEAD]
-for i in range(0,9):
+for i in range(0,n-1):
         KNOTS.append([0,0])
 
-## Part 1
-# def update_tail():
-#         global TAIL
-#         global TAIL_TRAIL
-#         if abs(HEAD[0]-TAIL[0]) > 1 or abs(HEAD[1]-TAIL[1]) > 1:
-#                 if HEAD[0] > TAIL[0]:
-#                         TAIL[0] = TAIL[0] + 1
-#                 elif HEAD[0] < TAIL[0]:
-#                         TAIL[0] = TAIL[0] - 1
-#                 if HEAD[1] > TAIL[1]:
-#                         TAIL[1] = TAIL[1] + 1
-#                 elif HEAD[1] < TAIL[1]:
-#                         TAIL[1] = TAIL[1] - 1
-#         TAIL_TRAIL.add(tuple(TAIL))
-
-## Part 2
 def update_tail():
         global KNOTS
         global TAIL_TRAIL
-        for i in range(1,10):
+        for i in range(1,n):
                 head = KNOTS[i-1]
                 tail = KNOTS[i]                
                 if abs(head[0]-tail[0]) > 1 or abs(head[1]-tail[1]) > 1:
@@ -40,7 +28,7 @@ def update_tail():
                                 tail[1] = tail[1] + 1
                         elif head[1] < tail[1]:
                                 tail[1] = tail[1] - 1
-        TAIL_TRAIL.add(tuple(KNOTS[-1]))
+                TAIL_TRAIL.add(tuple(KNOTS[-1]))
                 
 def update_knots():
         global KNOTS

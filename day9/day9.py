@@ -58,9 +58,10 @@ with open('input.txt', 'r') as fin:
 
 for line in lines:
         words = line.split()
-        direction = words[0]+'()'
+        direction = words[0]
+        assert(direction in ('R', 'L', 'U', 'D'))
         distance  = int(words[1])
         for i in range(0, distance):
-                eval(direction)
+                eval(direction+'()')
 
 print(len(TAIL_TRAIL))

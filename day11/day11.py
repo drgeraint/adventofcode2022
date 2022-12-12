@@ -3,8 +3,6 @@
 import sys
 import divisible as my
 
-#sys.setrecursionlimit(100000)
-
 filename = 'input.txt'
 #filename = 'test.txt'
 PART = 2
@@ -46,7 +44,6 @@ class Monkey:
                     x = int(x/3)
                 x = x % COMMON
                 if 0 == x % self.divisor:
-                #if my.divisible(x, self.divisor):
                     target = self.target_T
                 else:
                     target = self.target_F
@@ -81,13 +78,6 @@ for round in range(0,nrounds):
         m.update()
         activities.append(m.activity)
 
-    if 0 == round % 20:
-        print('Round', round)
-        # print('activities:', activities)
-        # for m in MONKEYS:
-        #     nitems = nitems + len(m.items)
-        #print('N:', nitems)
-    
 m0 = max(activities)
 activities.remove(m0)
 m1 = max(activities)

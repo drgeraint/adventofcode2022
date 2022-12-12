@@ -64,7 +64,7 @@ class Node:
         STEPS[self.pos] = k
         self.explore()          # Update steps (k) for adjacent nodes
                         
-S = Node(START, ord('a'), 0)
+S = Node(START, zmin, 0)
 
 print('Part 1:', STEPS[END])
 

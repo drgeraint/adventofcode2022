@@ -29,10 +29,7 @@ def update_tail():
                         elif head[1] < tail[1]:
                                 tail[1] = tail[1] - 1
                 TAIL_TRAIL.add(tuple(KNOTS[-1]))
-                
-def update_knots():
-        global KNOTS
-                
+                                
 def R():
         HEAD[0] = HEAD[0] + 1
         update_tail()

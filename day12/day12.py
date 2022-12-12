@@ -39,7 +39,8 @@ class Node:
         self.k = k              # steps from START
         STEPS[pos] = k
         NODES[pos] = self
-
+        self.explore()
+        
     def explore(self):
         x = self.pos[0]
         y = self.pos[1]
@@ -49,17 +50,14 @@ class Node:
                 #print('Found position', pos)
                 if MAP[pos] <= self.z + 1:
                     #print('Position', pos, 'is reachable')
-                    if pos in STEPS:
+                    if pos in NODES:
                         #print('Position', pos, 'has been found before')
-                        if STEPS[pos] <= next_step:
-                            pass
-                        else:
+                        if STEPS[pos] > next_step:
                             #print('Position', pos, 'is closer than previously discovered')
                             NODES[pos].update(next_step)
                     else:
                         #print('Position', pos, 'is a new node')
                         n = Node(pos, MAP[pos], next_step)
-                        n.explore()
 
     def update(self, k):
         self.k = k
@@ -67,7 +65,6 @@ class Node:
         self.explore()          # Update steps (k) for adjacent nodes
                         
 S = Node(START, ord('a'), 0)
-S.explore()
 
 print('Part 1:', STEPS[END])
 

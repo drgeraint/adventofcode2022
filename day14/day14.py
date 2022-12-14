@@ -1,5 +1,7 @@
 #! /usr/bin/env python3
 
+PART = 2
+
 #with open('test.txt', 'r') as fin:
 with open('input.txt', 'r') as fin:
     lines = fin.read().splitlines()
@@ -39,7 +41,12 @@ for line in lines:
                 #print(x,y, '#')
         else:
             print('Warning: unexpected input')
-                
+
+if 2 == PART:
+    YMAX += 2
+    for x in range(0, XMAX*2):
+        MAP[(x, YMAX)] = '#'
+            
 def display_map():
     display = ''
     for y in range(0, YMAX+1):
@@ -51,16 +58,20 @@ def display_map():
                 display += ' '
         display += '\n'
     print(display)
-
+    
 SAND = []
-abyss  = False
+
+abyss   = False
 falling = False
-while not abyss:
+blocked = False
+while not abyss and not blocked:
     if not falling:
         xsand = 500
         ysand = 0
         falling = True
-    if ysand == YMAX:
+    if (500,0) in MAP:
+        blocked = True
+    elif ysand == YMAX:
         abyss = True
     else:
         if (xsand, ysand+1) not in MAP:
@@ -76,5 +87,5 @@ while not abyss:
             SAND.append((xsand,ysand))
             falling = False
 display_map()
-print('Part 1:', len(SAND))
-        
+print('Part', PART, ':', len(SAND))
+

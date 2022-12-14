@@ -1,16 +1,15 @@
 #! /usr/bin/env python3
 
-PART = 2
+PART   = 2
+
+MAP    = {}
+SAND   = []
+SOURCE = (500,0)
+YMAX   = 0
 
 #with open('test.txt', 'r') as fin:
 with open('input.txt', 'r') as fin:
     lines = fin.read().splitlines()
-
-MAP = {}
-XMIN = 1000000
-XMAX = 0
-YMIN = 1000000
-YMAX = 0
 
 for line in lines:
     words = line.split()
@@ -22,9 +21,6 @@ for line in lines:
             x = p1[0]
             ymin = min([p1[1], p2[1]])
             ymax = max([p1[1], p2[1]])
-            XMIN = min(XMIN, x)
-            XMAX = max(XMAX, x)
-            YMIN = min(YMIN, ymin)
             YMAX = max(YMAX, ymax)
             for y in range(ymin, ymax+1):
                 MAP[(x, y)] = '#'
@@ -33,25 +29,26 @@ for line in lines:
             y = p1[1]
             xmin = min([p1[0], p2[0]])
             xmax = max([p1[0], p2[0]])
-            XMIN = min(XMIN, xmin)
-            XMAX = max(XMAX, xmax)
-            YMIN = min(YMIN, y)
+            YMAX = max(YMAX, y)
             for x in range(xmin, xmax+1):
                 MAP[(x, y)] = '#'
                 #print(x,y, '#')
         else:
             print('Warning: unexpected input')
 
+def xrange():
+    return range(SOURCE[0]-YMAX, SOURCE[0]+YMAX+1)
+            
 if 2 == PART:
     YMAX += 2
-    for x in range(0, XMAX*2):
+    for x in xrange():
         MAP[(x, YMAX)] = '#'
             
 def display_map():
     display = ''
     for y in range(0, YMAX+1):
         display += str(y)+' '
-        for x in range(XMIN, XMAX+1):
+        for x in xrange():
             if (x,y) in MAP:
                 display += MAP[(x,y)]
             else:
@@ -59,17 +56,16 @@ def display_map():
         display += '\n'
     print(display)
     
-SAND = []
-
 abyss   = False
-falling = False
 blocked = False
+falling = False
+
 while not abyss and not blocked:
     if not falling:
-        xsand = 500
-        ysand = 0
+        xsand = SOURCE[0]
+        ysand = SOURCE[1]
         falling = True
-    if (500,0) in MAP:
+    if SOURCE in MAP:
         blocked = True
     elif ysand == YMAX:
         abyss = True
@@ -86,6 +82,7 @@ while not abyss and not blocked:
             MAP[(xsand,ysand)] = 'o'
             SAND.append((xsand,ysand))
             falling = False
+
 display_map()
 print('Part', PART, ':', len(SAND))
 

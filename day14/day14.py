@@ -40,10 +40,6 @@ for line in lines:
         else:
             print('Warning: unexpected input')
                 
-        for x in range(p1[0], p2[0]+1):
-            for y in range(p1[1], p2[1]+1):
-                MAP[(x,y)] = '#'
-
 def display_map():
     display = ''
     for y in range(0, YMAX+1):

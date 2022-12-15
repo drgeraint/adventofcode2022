@@ -3,7 +3,7 @@
 #filename   = 'test.txt'
 filename   = 'input.txt'
 
-PART       = 2
+PART       = 1
 
 MAP        = {}
 SENSORS    = []
@@ -100,11 +100,11 @@ if 1 == PART:
         if (x,y) in MAP and '#' == MAP[(x,y)]:
             count += 1 
     print('Part 1:', count)
-elif 2 == PART:
-    for x in range(MIN, MAX+1):
-        for y in range(MIN, MAX+1):
-            if (x,y) not in MAP:
-                print(x,y)
-                print('Part 2:', x*4000000+y)
+# elif 2 == PART:
+#     for x in range(MIN, MAX+1):
+#         for y in range(MIN, MAX+1):
+#             if (x,y) not in MAP:
+#                 print(x,y)
+#                 print('Part 2:', x*4000000+y)
                 
 

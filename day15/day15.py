@@ -3,11 +3,12 @@
 #filename   = 'test.txt'
 filename   = 'input.txt'
 
-PART       = 1
+PART       = 2
 
 MAP        = {}
 SENSORS    = []
 BEACONS    = []
+EXTRABOUND = set()
 XMIN       = 0
 XMAX       = 0
 YMIN       = 0
@@ -32,6 +33,19 @@ def print_map(xmin=XMIN, xmax=XMAX, ymin=YMIN, ymax=YMAX):
                 display += ' '
         display += '\n'
     print(display)
+
+def add_boundary(pos):
+    x = pos[0]
+    y = pos[1]
+    global MIN
+    global MAX
+    if MIN <= x and x <= MAX and MIN <= y and y <= MAX:
+        detectable = False
+        for s in SENSORS:
+            if s.in_range(pos):
+                detectable = True
+        if not detectable:
+            EXTRABOUND.add(pos)
     
 class Sensor:
     def __init__ (self, s, b):
@@ -54,8 +68,6 @@ class Sensor:
         XMAX = max(XMAX, self.sx+self.d+1)
         YMIN = min(YMIN, self.sy-self.d-1)
         YMAX = max(YMAX, self.sy+self.d+1)
-        ymin = self.sy - self.d
-        ymax = self.sy + self.d
         # for y in range(ymin, ymax+1):  # Uses too much memory for large input
         if 1 == PART:
             if TARGET_ROW in range(self.sy-self.d, self.sy+self.d+1):
@@ -68,13 +80,27 @@ class Sensor:
                 for x in range(xmin, xmax+1):
                     if (x,y) not in MAP:
                         MAP[(x,y)] = '#'
-        # elif 2 == PART:
-        #     XMIN = MIN
-        #     XMAX = MAX+1
-        #     YMIN = MIN
-        #     YMAX = MAX+1
-        #     yrange = range(max(YMIN, self.sy-self.d), min(YMAX,self.sy+self.d+1))
-       
+        elif 2 == PART:
+            self.boundaries()
+
+    def boundaries(self):
+        ymin = self.sy - self.d
+        ymax = self.sy + self.d
+        for y in range(ymin, ymax+1):
+            xmin = self.sx - abs(self.d - abs(self.sy-y))
+            xmax = self.sx + abs(self.d - abs(self.sy-y))                
+            add_boundary((xmin-1,y))
+            add_boundary((xmax+1,y))
+        for x in range(self.sx-1,self.sx+2):
+            add_boundary((x,ymin-1))
+            add_boundary((x,ymax+1))
+
+    def in_range(self, pos):
+        x = pos[0]
+        y = pos[1]
+        d = abs(self.sx-x)+abs(self.sy-y)
+        return d <= self.d
+            
 with open(filename, 'r') as fin:
     lines = fin.read().splitlines()
 
@@ -100,11 +126,17 @@ if 1 == PART:
         if (x,y) in MAP and '#' == MAP[(x,y)]:
             count += 1 
     print('Part 1:', count)
-# elif 2 == PART:
-#     for x in range(MIN, MAX+1):
-#         for y in range(MIN, MAX+1):
-#             if (x,y) not in MAP:
-#                 print(x,y)
-#                 print('Part 2:', x*4000000+y)
+elif 2 == PART:
+    print('N', len(EXTRABOUND))
+    for p in EXTRABOUND:
+        x = p[0]
+        y = p[1]
+        if MIN <= x and x <= MAX and MIN <= y and y <= MAX:
+            detectable = False
+            for s in SENSORS:
+                if s.in_range(p):
+                    detectable = True
+            if not detectable:
+                print('Part 2:', 4000000*x+y, x, y)
                 
 

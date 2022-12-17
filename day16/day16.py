@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
-filename = 'test.txt'
-#filename = 'input.txt'
+#filename = 'test.txt'
+filename = 'input.txt'
 
 with open(filename, 'r') as fin:
     lines = fin.read().splitlines()
@@ -58,12 +58,22 @@ class Valve:
             self.steps[c] = 1
         
     def update(self):
+        changed = False
         for tag in self.cnxn:
             v = VALVES[tag]
             for c in v.steps:
                 if c not in self.steps:
                     self.steps[c] = v.steps[c] + 1
-
+                    print('Added', tag, '->', c, '=', self.steps[c])
+                    changed = True
+                elif self.steps[c] > v.steps[c]+1:
+                    old = self.steps[c]
+                    new = v.steps[c] + 1
+                    self.steps[c] = new
+                    print('Updated', tag, '->', c, 'from', old, 'to', new)
+                    changed = True
+        return changed
+                    
     def find_paths(self, path=[]):
         global BEST
         if self.name not in path:
@@ -97,16 +107,19 @@ for line in lines:
        START = words[1]
     Valve(words[1], int(words[4][5:].strip(';')), [c.strip(',') for c in words[9:]])
 print('Valves created')
-        
+
 i = 0
-while i < len(VALVES):
-    l = []
+do_update = True
+while do_update:
+    if i > len(VALVES):
+        do_update = False
     for tag in VALVES:
         v = VALVES[tag]
-        v.update()
-        l.append(len(v.steps))
-    i = min(l)
-print('Intervalve distances computed')
+        changed = v.update()
+        if changed:
+            do_update = True
+    i += 1
+print('Intervalve distances updated:', i)
 
 if 'test.txt' == filename:
     print(VALVES[START].steps)

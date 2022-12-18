@@ -1,10 +1,26 @@
 #! /usr/bin/env python3
 
+PART = 2
+
+if 1 == PART:
+    LIMIT = 2022
+elif 2 == PART:
+    LIMIT = 1000000000000
+
 TOP    = 0
 MAP    = {}
-SHAPES = []
+NSHAPE = 0
 SEQ = { 'Minus' : 'Plus()', 'Plus' : 'L()', 'L' : 'I()', 'I' : 'O()', 'O' : 'Minus()' }
 
+RESULTS = 'results.csv'
+FLATTOP = 'flattop.txt'
+
+with open(RESULTS, 'x') as fout:
+    fout.write('"nshapes", "top"\n')
+
+with open(FLATTOP, 'x') as fout:
+    pass
+    
 class Coord:
     def __init__(self, x, y):
         self.x = x
@@ -29,13 +45,17 @@ class Coord:
     
 class Shape:
     def __init__(self, kind):
+        global NSHAPE
+        global SHAPE
         global TOP
         self.init   = Coord(2, TOP + 4)
         self.points = []
         self.kind   = kind
-        SHAPES.append(self)
+        NSHAPE += 1
+        SHAPE=self
         
     def down(self):
+        global LIMIT
         global MAP
         global TOP        
         new_points = [point.down() for point in self.points]
@@ -46,7 +66,23 @@ class Shape:
                 MAP[(point.x, point.y)] = '#'
                 if point.y > TOP:
                     TOP = point.y
-            if len(SHAPES) < 2022:        
+                if point.y > 5000:
+                    for x in range(0,6):
+                        for y in range(point.y-5000, point.y-3000):
+                            p = (x,y)
+                            if p in MAP:
+                                MAP.pop((x,y))
+            if NSHAPE < LIMIT:
+                flattop = True
+                for i in range(0, 7):
+                    if (i, TOP) not in MAP:
+                        flattop = False
+                if flattop:
+                    with open(FLATTOP, 'a') as fout:
+                        fout.write(str(NSHAPE)+','+SHAPE.kind+'\n')
+                        
+                with open(RESULTS, 'a') as fout:
+                    fout.write(str(NSHAPE)+','+str(TOP)+'\n')
                 eval(SEQ[self.kind]) # New Shape
                 
     def left(self):
@@ -100,20 +136,15 @@ class O(Shape):
         self.points = [point+self.init for point in points]
         
 def down():
-    shape = SHAPES[-1]
-    shape.down()
+    SHAPE.down()
 
 def left():
-    shape = SHAPES[-1]
-    shape.down()
-    shape = SHAPES[-1]
-    shape.left()
+    SHAPE.down()
+    SHAPE.left()
     
 def right():
-    shape = SHAPES[-1]
-    shape.down()
-    shape = SHAPES[-1]
-    shape.right()
+    SHAPE.down()
+    SHAPE.right()
 
 def print_map():
     s = ''
@@ -136,13 +167,13 @@ with open('input.txt', 'r') as fin:
     line = fin.read()
 
     
-while len(SHAPES) < 2022:
+while NSHAPE < LIMIT:
     for c in line:
         if '<' is c:
             left()
         elif '>' is c:
             right()
 
-print_map()
-print('nshapes:', len(SHAPES))
-print('Part 1:', TOP+1)
+#print_map()
+print('nshapes:', NSHAPE)
+print('Part', PART, ':', TOP+1)

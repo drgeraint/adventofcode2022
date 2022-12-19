@@ -84,12 +84,7 @@ for pos in CUBES:
         ZMAX = z
 
 def inbounds(pos):
-    global XMIN
-    global XMAX
-    global YMIN
-    global YMAX
-    global ZMIN
-    global ZMAX
+    global XMIN, XMAX, YMIN, YMAX, ZMIN, ZMAX
 
     x = pos[0]
     y = pos[1]
@@ -133,9 +128,9 @@ for z in [ZMIN-1, ZMAX+1]:
             if pos not in STEAM and pos not in CUBES:
                 Steam(pos)
 
-nsteam = len(STEAM)
 propagating = True
 while propagating:
+    nsteam = len(STEAM)
     for pos, s in STEAM.items():
         s.propagate()
     if len(STEAM) == nsteam:
